@@ -1,0 +1,21 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "dendra"
+version = "0.1.0"
+description = "Generate mathematically-driven SVG silhouettes of NW Arkansas native trees"
+requires-python = ">=3.9"
+dependencies = [
+    "typer[all]>=0.12",
+    "rich>=13",
+    "numpy>=1.26",
+    "noise>=1.2.2",
+]
+
+[project.scripts]
+dendra = "dendra.cli:app"
+
+[tool.hatch.build.targets.wheel]
+packages = ["dendra"]
