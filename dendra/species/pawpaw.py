@@ -1,50 +1,47 @@
-"""Pawpaw (Asimina triloba) — oval understory clump.
+"""Pawpaw (Asimina triloba) — dense pyramidal understory tree.
 
-Math: Short-depth L-system (understory tree, not tall) producing a dense
-oval clump of branches. Elliptical Fourier envelope (dome compressed
-vertically). Wave modulation at a warm mid note.
-Default note: A3 — warm mid-range, gentle oscillation.
+Math: Central-leader A/B rule with a double-whorl B
+(B → F[+B][-B]F[+B][-B]) produces four lateral sub-branches per tier step
+rather than two, creating the dense bushy fullness characteristic of pawpaw.
+Angle 58° gives a wide-spreading pyramid clearly distinct from pine (75°)
+and cedar (42°). Seven iterations ensures enough top-tier density so the
+crown stays full all the way to the tip.
 """
 
 from dendra.math.lsystem import LSystemSpec
-from dendra.math.fourier import dome_crown, FourierCrown
 from dendra.species.base import TreeSpec, WaveParams, CrownParams
-
-# Pawpaw crown: oval = dome with vertical compression
-_pawpaw_crown = dome_crown(radius=70.0, asymmetry=0.05, flatten=0.4)
-_pawpaw_crown.scale = 0.85   # slightly narrower overall
 
 spec = TreeSpec(
     name="pawpaw",
     display_name="Pawpaw",
     scientific_name="Asimina triloba",
-    silhouette="Dense oval understory clump with tropical-looking broad leaves",
-    math_engine="L-system + Fourier oval crown",
+    silhouette="Dense pyramidal understory crown, four-branch whorls, short trunk",
+    math_engine="L-system (central-leader A/B, double-whorl 58°) + wave modulation",
     lsystem=LSystemSpec(
-        axiom="X",
+        axiom="A",
         rules={
-            "X": "F[+X][-X]FX",
-            "F": "FF",
+            "A": "F[+B][-B]A",
+            "B": "F[+B][-B]F[+B][-B]",
         },
-        angle=30.0,
-        iterations=4,
-        step_length=7.0,
-        length_decay=0.70,
+        angle=58.0,
+        iterations=7,
+        step_length=6.0,
+        length_decay=0.56,
     ),
     wave=WaveParams(
         n_harmonics=3,
         harmonic_decay=0.55,
-        angle_scale=14.0,
-        length_scale=0.12,
+        angle_scale=8.0,
+        length_scale=0.10,
     ),
     crown=CrownParams(
-        use_fourier=True,
-        crown=_pawpaw_crown,
-        noise_amplitude=0.07,
-        trunk_height_ratio=0.15,
+        use_fourier=False,
+        noise_amplitude=0.06,
+        trunk_height_ratio=0.08,
+        clip_branches=False,
     ),
     default_palette="summer-canopy",
     default_note="A3",
-    trunk_width_base=6.0,
+    trunk_width_base=7.0,
     trunk_width_min=0.4,
 )

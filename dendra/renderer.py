@@ -198,9 +198,8 @@ def render(
     for seg in segments:
         sw = stroke_width(seg.depth, max_depth, spec.trunk_width_base, spec.trunk_width_min)
         # depth 0 (outside all brackets) = trunk spine → branch color
-        # depth 1+ (inside brackets) = foliage → canopy color
-        t = seg.depth / (max_depth or 1)
-        if t < 0.15:
+        # depth 1+ (inside any bracket) = foliage → canopy color
+        if seg.depth == 0:
             stroke = branch_fill
         else:
             stroke = canopy_fill
