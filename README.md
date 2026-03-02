@@ -4,6 +4,17 @@ Generate mathematically-driven SVG silhouettes of NW Arkansas native trees.
 
 ![Eight tree species rendered as SVG silhouettes showing different palettes and seeds](docs/preview-3.svg)
 
+```bash
+dendra generate redbud    --palette spring-bloom       --seed 2
+dendra generate pine      --palette winter-silhouette
+dendra generate cedar     --palette ink-wash           --seed 3
+dendra generate dogwood   --palette ozark-dusk         --seed 1
+dendra generate white-oak --palette ozark-autumn       --seed 5
+dendra generate sycamore  --palette bare-bones         --seed 2
+dendra generate pawpaw    --palette summer-canopy      --seed 4
+dendra generate persimmon --gradient '#8b2500:#e8922a:vertical' --seed 1
+```
+
 Each tree is built from three layered math systems: an **L-system** defines the branching structure, **wave harmonics** modulate branch angles based on a musical note, and **Perlin noise** drifts segment endpoints for organic irregularity. Deciduous species optionally get a **Fourier crown envelope** overlay.
 
 ## Species
