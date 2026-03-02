@@ -19,6 +19,12 @@ env/
 out/
 output/
 
+# Generated preview thumbnails
+docs/thumbs/
+
+# Internal dev notes
+agents.md
+
 # OS
 .DS_Store
 Thumbs.db

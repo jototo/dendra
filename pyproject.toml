@@ -7,12 +7,21 @@ name = "dendra"
 version = "0.1.0"
 description = "Generate mathematically-driven SVG silhouettes of NW Arkansas native trees"
 requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+    { name = "joshua", email = "29579893+jototo@users.noreply.github.com" },
+]
+keywords = ["svg", "generative-art", "l-system", "trees", "fractals", "fourier"]
 dependencies = [
     "typer[all]>=0.12",
     "rich>=13",
     "numpy>=1.26",
     "noise>=1.2.2",
 ]
+
+[project.urls]
+Homepage = "https://github.com/jototo/dendra"
+Repository = "https://github.com/jototo/dendra"
 
 [project.scripts]
 dendra = "dendra.cli:app"

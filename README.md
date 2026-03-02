@@ -23,11 +23,11 @@ Each tree is built from three layered math systems: an **L-system** defines the 
 |---|---|---|
 | `redbud` | Eastern Redbud | L-system + Fourier vase crown |
 | `pine` | Shortleaf Pine | Central-leader A/B L-system |
-| `white_oak` | White Oak | L-system + Fourier dome |
-| `dogwood` | Flowering Dogwood | L-system + Perlin drift |
+| `white-oak` | White Oak | L-system + Fourier dome |
+| `dogwood` | Flowering Dogwood | L-system + Fourier tiered crown |
 | `cedar` | Eastern Red Cedar | Central-leader A/B L-system |
 | `sycamore` | Sycamore | L-system + Fourier asymmetric dome |
-| `pawpaw` | Pawpaw | L-system + Perlin drift |
+| `pawpaw` | Pawpaw | Central-leader A/B L-system (double-whorl) |
 | `persimmon` | Persimmon | L-system + Perlin drift |
 
 ## Install
@@ -55,7 +55,7 @@ uv run dendra generate sycamore --note A3 --seed 7
 uv run dendra batch
 
 # Open in browser after rendering
-uv run dendra generate white_oak --preview
+uv run dendra generate white-oak --preview
 ```
 
 ## Options
