@@ -2,6 +2,8 @@
 
 Generate mathematically-driven SVG silhouettes of NW Arkansas native trees.
 
+![Eight tree species rendered as SVG silhouettes on a dark green background](docs/preview.svg)
+
 Each tree is built from three layered math systems: an **L-system** defines the branching structure, **wave harmonics** modulate branch angles based on a musical note, and **Perlin noise** drifts segment endpoints for organic irregularity. Deciduous species optionally get a **Fourier crown envelope** overlay.
 
 ## Species
