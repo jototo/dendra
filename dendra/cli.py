@@ -144,6 +144,7 @@ def generate(
     gradient: Optional[str] = typer.Option(None, "--gradient", "-g", help="Gradient e.g. '#1a3a2a:#8fb8a0:vertical'"),
     width: int = typer.Option(600, "--width", "-W", help="Canvas width in px"),
     height: int = typer.Option(700, "--height", "-H", help="Canvas height in px"),
+    style: str = typer.Option("lsystem", "--style", help="Render style: lsystem or waveform"),
     preview: bool = typer.Option(False, "--preview", help="Open SVG in browser after generation"),
     debug: bool = typer.Option(False, "--debug", help="Show full tracebacks on error"),
 ) -> None:
@@ -184,13 +185,16 @@ def generate(
 
     console.print()
 
+    # --- Validate style ---
+    if style not in ("lsystem", "waveform"):
+        _error(f"Unknown style {style!r}. Available: lsystem, waveform")
+
     # --- Progress pipeline ---
-    stages = [
-        "Expanding L-system",
-        "Applying wave modulation",
-        "Building SVG paths",
-        "Writing file",
-    ]
+    stages = (
+        ["Expanding L-system", "Applying wave modulation", "Building SVG paths", "Writing file"]
+        if style == "lsystem" else
+        ["Sampling harmonic wave", "Building waveform polygon", "Writing file"]
+    )
 
     svg_element = None
 
@@ -205,24 +209,34 @@ def generate(
         task = progress.add_task(stages[0], total=len(stages))
 
         try:
-            # Stage 1+2+3 are all inside render() — we simulate progress
             progress.update(task, description=stages[0], completed=0)
-            # We call render which does all three stages internally
-            svg_element = render(
-                spec=spec,
-                color=color_cfg,
-                iterations=n_iter,
-                note=note_str,
-                harmonic_depth=n_harm,
-                seed=seed,
-                canvas_width=width,
-                canvas_height=height,
-            )
-            progress.update(task, description=stages[1], completed=1)
-            progress.update(task, description=stages[2], completed=2)
-            progress.update(task, description=stages[3], completed=3)
 
-            # Stage 4: write file
+            if style == "waveform":
+                from dendra.wave_renderer import render_waveform
+                svg_element = render_waveform(
+                    spec=spec,
+                    color=color_cfg,
+                    note=note_str,
+                    harmonic_depth=n_harm,
+                    seed=seed,
+                    canvas_width=width,
+                    canvas_height=height,
+                )
+                progress.update(task, description=stages[1], completed=1)
+            else:
+                svg_element = render(
+                    spec=spec,
+                    color=color_cfg,
+                    iterations=n_iter,
+                    note=note_str,
+                    harmonic_depth=n_harm,
+                    seed=seed,
+                    canvas_width=width,
+                    canvas_height=height,
+                )
+                progress.update(task, description=stages[1], completed=1)
+                progress.update(task, description=stages[2], completed=2)
+
             write_svg(svg_element, out_path)
             progress.update(task, completed=len(stages))
 
@@ -239,8 +253,10 @@ def generate(
     summary.add_column(style="param.value")
 
     summary.add_row("Species",    f"[species.name]{spec.display_name}[/species.name]  [species.sci]{spec.scientific_name}[/species.sci]")
+    summary.add_row("Style",      f"[math.value]{style}[/math.value]")
     summary.add_row("Output",     f"[path.out]{out_path}[/path.out]  [dim]({_file_size(out_path)})[/dim]")
-    summary.add_row("Iterations", f"[math.value]{n_iter}[/math.value]")
+    if style == "lsystem":
+        summary.add_row("Iterations", f"[math.value]{n_iter}[/math.value]")
     summary.add_row("Note",       f"[math.value]{note_str}[/math.value]  [dim]→  {freq:.1f} Hz[/dim]")
     summary.add_row("Harmonics",  f"[math.value]{n_harm}[/math.value]")
     summary.add_row("Seed",       f"[math.value]{seed}[/math.value]")
@@ -283,6 +299,7 @@ def batch(
     gradient: Optional[str] = typer.Option(None, "--gradient", "-g"),
     width: int = typer.Option(600, "--width", "-W"),
     height: int = typer.Option(700, "--height", "-H"),
+    style: str = typer.Option("lsystem", "--style"),
     debug: bool = typer.Option(False, "--debug"),
 ) -> None:
     from dendra.renderer import render, write_svg
@@ -318,16 +335,28 @@ def batch(
             out_path = output_dir / f"{slug}.svg"
             ok = True
             try:
-                svg_el = render(
-                    spec=spec,
-                    color=color_cfg,
-                    iterations=iterations or spec.lsystem.iterations,
-                    note=note or spec.default_note,
-                    harmonic_depth=harmonic_depth or spec.wave.n_harmonics,
-                    seed=seed,
-                    canvas_width=width,
-                    canvas_height=height,
-                )
+                if style == "waveform":
+                    from dendra.wave_renderer import render_waveform
+                    svg_el = render_waveform(
+                        spec=spec,
+                        color=color_cfg,
+                        note=note or spec.default_note,
+                        harmonic_depth=harmonic_depth or spec.wave.n_harmonics,
+                        seed=seed,
+                        canvas_width=width,
+                        canvas_height=height,
+                    )
+                else:
+                    svg_el = render(
+                        spec=spec,
+                        color=color_cfg,
+                        iterations=iterations or spec.lsystem.iterations,
+                        note=note or spec.default_note,
+                        harmonic_depth=harmonic_depth or spec.wave.n_harmonics,
+                        seed=seed,
+                        canvas_width=width,
+                        canvas_height=height,
+                    )
                 write_svg(svg_el, out_path)
                 size = _file_size(out_path)
             except Exception as e:
