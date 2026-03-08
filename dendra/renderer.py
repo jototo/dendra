@@ -47,6 +47,7 @@ def render(
     seed: int = 0,
     canvas_width: int = 600,
     canvas_height: int = 700,
+    trunk_height: float | None = None,
 ) -> ET.Element:
     """Generate an SVG Element for the given TreeSpec and parameters.
 
@@ -80,7 +81,8 @@ def render(
     # --- Coordinate transform: fit tree into canvas ---
     tree_w = bbox.width or 1
     tree_h = bbox.height or 1
-    trunk_h = canvas_height * spec.crown.trunk_height_ratio
+    trunk_ratio = trunk_height if trunk_height is not None else spec.crown.trunk_height_ratio
+    trunk_h = canvas_height * trunk_ratio
 
     # Scale to fit, leaving headroom for trunk below
     usable_h = canvas_height - trunk_h - 20

@@ -32,6 +32,7 @@ def render_waveform(
     seed: int = 0,
     canvas_width: int = 600,
     canvas_height: int = 700,
+    trunk_height: float | None = None,
 ) -> ET.Element:
     """Render tree as a vertical waveform silhouette.
 
@@ -49,7 +50,8 @@ def render_waveform(
 
     # Crown geometry
     # Waveform style uses a taller trunk than lsystem style — crown sits higher.
-    wave_trunk_ratio = min(spec.crown.trunk_height_ratio + 0.30, 0.60)
+    base_ratio = trunk_height if trunk_height is not None else spec.crown.trunk_height_ratio
+    wave_trunk_ratio = min(base_ratio + 0.30, 0.60)
     trunk_px = canvas_height * wave_trunk_ratio
     crown_y_bottom = canvas_height - trunk_px
     crown_y_top = canvas_height * 0.07

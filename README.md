@@ -92,6 +92,7 @@ generate <species>
   -g, --gradient STR      Gradient e.g. '#1a3a2a:#8fb8a0:vertical'
   -W, --width INT         Canvas width in px (default: 600)
   -H, --height INT        Canvas height in px (default: 700)
+      --trunk-height FLOAT Trunk height as fraction of canvas height (0.0–1.0)
       --preview           Open SVG in browser after generation
 ```
 

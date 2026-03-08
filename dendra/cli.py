@@ -144,6 +144,7 @@ def generate(
     gradient: Optional[str] = typer.Option(None, "--gradient", "-g", help="Gradient e.g. '#1a3a2a:#8fb8a0:vertical'"),
     width: int = typer.Option(600, "--width", "-W", help="Canvas width in px"),
     height: int = typer.Option(700, "--height", "-H", help="Canvas height in px"),
+    trunk_height: Optional[float] = typer.Option(None, "--trunk-height", help="Trunk height as fraction of canvas height (0.0–1.0)"),
     style: str = typer.Option("lsystem", "--style", help="Render style: lsystem or waveform"),
     preview: bool = typer.Option(False, "--preview", help="Open SVG in browser after generation"),
     debug: bool = typer.Option(False, "--debug", help="Show full tracebacks on error"),
@@ -221,6 +222,7 @@ def generate(
                     seed=seed,
                     canvas_width=width,
                     canvas_height=height,
+                    trunk_height=trunk_height,
                 )
                 progress.update(task, description=stages[1], completed=1)
             else:
@@ -233,6 +235,7 @@ def generate(
                     seed=seed,
                     canvas_width=width,
                     canvas_height=height,
+                    trunk_height=trunk_height,
                 )
                 progress.update(task, description=stages[1], completed=1)
                 progress.update(task, description=stages[2], completed=2)
@@ -260,6 +263,8 @@ def generate(
     summary.add_row("Note",       f"[math.value]{note_str}[/math.value]  [dim]→  {freq:.1f} Hz[/dim]")
     summary.add_row("Harmonics",  f"[math.value]{n_harm}[/math.value]")
     summary.add_row("Seed",       f"[math.value]{seed}[/math.value]")
+    if trunk_height is not None:
+        summary.add_row("Trunk H",    f"[math.value]{trunk_height:.2f}[/math.value]")
 
     if color_cfg.mode == "palette":
         summary.add_row("Palette", _palette_swatch(color_cfg.palette.name))
@@ -299,6 +304,7 @@ def batch(
     gradient: Optional[str] = typer.Option(None, "--gradient", "-g"),
     width: int = typer.Option(600, "--width", "-W"),
     height: int = typer.Option(700, "--height", "-H"),
+    trunk_height: Optional[float] = typer.Option(None, "--trunk-height"),
     style: str = typer.Option("lsystem", "--style"),
     debug: bool = typer.Option(False, "--debug"),
 ) -> None:
@@ -345,6 +351,7 @@ def batch(
                         seed=seed,
                         canvas_width=width,
                         canvas_height=height,
+                        trunk_height=trunk_height,
                     )
                 else:
                     svg_el = render(
@@ -356,6 +363,7 @@ def batch(
                         seed=seed,
                         canvas_width=width,
                         canvas_height=height,
+                        trunk_height=trunk_height,
                     )
                 write_svg(svg_el, out_path)
                 size = _file_size(out_path)
