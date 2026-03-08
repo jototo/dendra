@@ -2,7 +2,7 @@
 
 Generate mathematically-driven SVG silhouettes of NW Arkansas native trees.
 
-![Eight tree species rendered as SVG silhouettes showing different palettes and seeds](docs/preview-5.svg)
+![Eight tree species rendered as SVG silhouettes showing different palettes and seeds](docs/preview-6.svg)
 
 ```bash
 dendra generate redbud    --palette spring-bloom       --seed 2
