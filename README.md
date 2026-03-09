@@ -72,6 +72,7 @@ The tree is drawn as a vertical waveform silhouette. The harmonic wave sum `Σ w
 dendra generate pine      --style waveform --palette winter-silhouette
 dendra generate sycamore  --style waveform --palette bare-bones
 dendra generate persimmon --style waveform --gradient '#8b2500:#e8922a:vertical'
+dendra generate white-oak --style waveform --base-width 1.0 --palette ozark-autumn
 dendra batch              --style waveform
 ```
 
@@ -93,6 +94,7 @@ generate <species>
   -W, --width INT         Canvas width in px (default: 600)
   -H, --height INT        Canvas height in px (default: 700)
       --trunk-height FLOAT Trunk height as fraction of canvas height (0.0–1.0)
+      --base-width FLOAT  Waveform base shape: 0.0=oval/teardrop, 1.0=flat D-shape (waveform only)
       --preview           Open SVG in browser after generation
 ```
 
