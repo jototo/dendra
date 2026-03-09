@@ -145,6 +145,7 @@ def generate(
     width: int = typer.Option(600, "--width", "-W", help="Canvas width in px"),
     height: int = typer.Option(700, "--height", "-H", help="Canvas height in px"),
     trunk_height: Optional[float] = typer.Option(None, "--trunk-height", help="Trunk height as fraction of canvas height (0.0–1.0)"),
+    base_width: float = typer.Option(0.0, "--base-width", help="Waveform base flatness (0.0=oval, 1.0=flat D-shape)"),
     style: str = typer.Option("lsystem", "--style", help="Render style: lsystem or waveform"),
     preview: bool = typer.Option(False, "--preview", help="Open SVG in browser after generation"),
     debug: bool = typer.Option(False, "--debug", help="Show full tracebacks on error"),
@@ -223,6 +224,7 @@ def generate(
                     canvas_width=width,
                     canvas_height=height,
                     trunk_height=trunk_height,
+                    base_width=base_width,
                 )
                 progress.update(task, description=stages[1], completed=1)
             else:
@@ -265,6 +267,8 @@ def generate(
     summary.add_row("Seed",       f"[math.value]{seed}[/math.value]")
     if trunk_height is not None:
         summary.add_row("Trunk H",    f"[math.value]{trunk_height:.2f}[/math.value]")
+    if style == "waveform" and base_width != 0.0:
+        summary.add_row("Base Width",  f"[math.value]{base_width:.2f}[/math.value]")
 
     if color_cfg.mode == "palette":
         summary.add_row("Palette", _palette_swatch(color_cfg.palette.name))
@@ -305,6 +309,7 @@ def batch(
     width: int = typer.Option(600, "--width", "-W"),
     height: int = typer.Option(700, "--height", "-H"),
     trunk_height: Optional[float] = typer.Option(None, "--trunk-height"),
+    base_width: float = typer.Option(0.0, "--base-width"),
     style: str = typer.Option("lsystem", "--style"),
     debug: bool = typer.Option(False, "--debug"),
 ) -> None:
@@ -352,6 +357,7 @@ def batch(
                         canvas_width=width,
                         canvas_height=height,
                         trunk_height=trunk_height,
+                        base_width=base_width,
                     )
                 else:
                     svg_el = render(

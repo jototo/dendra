@@ -33,6 +33,7 @@ def render_waveform(
     canvas_width: int = 600,
     canvas_height: int = 700,
     trunk_height: float | None = None,
+    base_width: float = 0.0,
 ) -> ET.Element:
     """Render tree as a vertical waveform silhouette.
 
@@ -73,9 +74,13 @@ def render_waveform(
 
     # --- Envelope function ---
     # t=0 = crown top (tips), t=1 = crown bottom (base)
-    # Widest around t=0.55, tapers smoothly to 0 at both ends.
+    # base_width=0.0: tapers to 0 at both ends (oval/teardrop)
+    # base_width=1.0: flat base at trunk join (D / half-circle shape)
     def envelope(t: float) -> float:
-        return (t ** 0.55) * ((1.0 - t) ** 0.55) * 4.0
+        top_taper = t ** 0.55
+        bottom_tapered = (1.0 - t) ** 0.55
+        bottom_factor = bottom_tapered + base_width * (1.0 - bottom_tapered)
+        return top_taper * bottom_factor * 4.0
 
     # --- Sample waveform ---
     n_samples = 600
